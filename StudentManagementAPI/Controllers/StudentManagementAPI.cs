@@ -27,7 +27,7 @@ namespace StudentManagementAPI.Controllers {
                 return BadRequest("Cannot add more than 5 students.");
             }
             studetns.Add(name);
-            return Ok("studetn added sucessfully>>>");
+            return Ok("student added sucessfully>>>");
         }
 
     }
