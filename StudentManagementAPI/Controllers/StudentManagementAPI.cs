@@ -1,34 +1,73 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using StudentManagementAPI.Models;
+using System.Collections.Immutable;
+using System.Diagnostics.Metrics;
+using System.Reflection.Metadata;
+using System.Xml.Linq;
 namespace StudentManagementAPI.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
+
+
     {
-        [HttpGet]
-        public IActionResult GetallStudents()
+
+
+        private static List<Student> students = new List<Student>()
         {
-            return Ok("All Students data>>>");
+            new Student { Id = 1, Name = "Hassan", Age = 22 },
+            new Student { Id = 2, Name = "Ali", Age = 21 }
+
+        };
+
+        [HttpGet]
+        public IActionResult GetAllStudents()
+        {
+            return Ok(students);
         }
 
 
         [HttpGet("{id}")]
         public IActionResult GetStudentbyId(int id)
         {
-            return Ok($"Student data for ID: {id}>>>");
-        }
+            // 1. We ask the list: "Find the FIRST student WHERE the Id matches the one from the URL"
+            var student = students.FirstOrDefault(x => x.Id == id);
 
-       private static  List<string> studetns  =new List<string>(){"Student1","Student2","Student3"};
+            // 2. Check if we actually found someone
+            if (student == null)
+            {
+                return NotFound("Student not found!");
+            }
+
+            // 3. Return that specific student
+            return Ok(student);
+        }
 
         [HttpPost]
-        public IActionResult AddStudent([FromBody] string name)
+        public IActionResult AddStudent(CreateStudentDto dto)
         {
-            if(studetns.Count >= 5)
+            var student = new Student
             {
-                return BadRequest("Cannot add more than 5 students.");
-            }
-            studetns.Add(name);
-            return Ok("student added sucessfully>>>");
+                Id = students.Count + 1, // This is a simple way to generate a new ID. In a real application, you'd use a database.
+                Name = dto.Name,
+                Age = dto.Age
+            };
+            students.Add(student);
+            return Ok(student);
         }
+        //so will the user enter the name and age on frontend then it all goes to the dto object inside parameter and then is used inside the : var student = new Student
+
+        //{
+
+        //    Id = students.Count + 1, // This is a simple way to generate a new ID. In a real application, you'd use a database.
+
+        //    Name = dto.Name,
+
+        //    Age = dto.Age
+
+        //};
+
 
     }
 }
