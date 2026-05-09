@@ -5,7 +5,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.Metrics;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
-namespace StudentManagementAPI.Controllers {
+namespace StudentManagementAPI.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
@@ -67,7 +68,28 @@ namespace StudentManagementAPI.Controllers {
         //    Age = dto.Age
 
         //};
+        [HttpPut("{id}")]
+        public IActionResult UpdateStudent(int id, UpdateStudentDto dto)
+        {
+            var student = students.FirstOrDefault(x => x.Id == id);
 
+            if (student == null)
+                return NotFound("Student not found");
 
+            student.Name = dto.name;
+            student.Age = dto.age;
+
+            return Ok(student);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStudent(int id)
+        {
+            var student = students.FirstOrDefault(x => x.Id == id);
+            if (student == null)
+                return NotFound("Student not found");
+            students.Remove(student);
+            return Ok("Student deleted successfully");
+        }
     }
 }
