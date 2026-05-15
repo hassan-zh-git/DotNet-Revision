@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StudentManagementAPI.Models;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Metrics;
 using System.Reflection.Metadata;
+using System.Security.Cryptography.Xml;
 using System.Xml.Linq;
 namespace StudentManagementAPI.Controllers
 {
@@ -22,12 +24,33 @@ namespace StudentManagementAPI.Controllers
 
         };
 
+        //[HttpGet]
+        //public IActionResult GetAllStudents()
+        //{
+        //    return Ok(students);
+        //}
+
         [HttpGet]
         public IActionResult GetAllStudents()
         {
-            return Ok(students);
-        }
+            var response = students.Select(x => new StudentResponseDto
+            {
+                Id = x.Id,
+                Name = x.Name
+            }).ToList();
 
+            return Ok(response);
+        }
+//EXPLANATION
+        //students          → go into the list
+        //.Select(          → for EACH item in that list
+        //x =>              → x means "current student" (like i in for loop)
+        //new StudentResponseDto  → transform it INTO this new shape
+        //{
+        //Id = x.Id,    → take Id from current student
+        //Name = x.Name → take Name from current student
+        //}                 → Age ignored — not copied
+        //)
 
         [HttpGet("{id}")]
         public IActionResult GetStudentbyId(int id)
