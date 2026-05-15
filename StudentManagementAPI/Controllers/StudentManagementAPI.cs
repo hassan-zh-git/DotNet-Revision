@@ -41,7 +41,7 @@ namespace StudentManagementAPI.Controllers
 
             return Ok(response);
         }
-//EXPLANATION
+        //EXPLANATION
         //students          → go into the list
         //.Select(          → for EACH item in that list
         //x =>              → x means "current student" (like i in for loop)
@@ -52,20 +52,45 @@ namespace StudentManagementAPI.Controllers
         //}                 → Age ignored — not copied
         //)
 
+
+        //[HttpGet("{id}")]
+        //public IActionResult GetStudentbyId(int id)
+        //{
+        // 1. We ask the list: "Find the FIRST student WHERE the Id matches the one from the URL"
+        //var student = students.FirstOrDefault(x => x.Id == id);
+
+        // 2. Check if we actually found someone
+        //if (student == null)
+        //{
+        //return NotFound("Student not found!");
+        //}
+
+        // 3. Return that specific student
+        //return Ok(student);
+        //}
+
         [HttpGet("{id}")]
-        public IActionResult GetStudentbyId(int id)
+        public IActionResult GetStudentById(int id)
         {
-            // 1. We ask the list: "Find the FIRST student WHERE the Id matches the one from the URL"
-            var student = students.FirstOrDefault(x => x.Id == id);
-
-            // 2. Check if we actually found someone
-            if (student == null)
+            try
             {
-                return NotFound("Student not found!");
-            }
+                var student = students.FirstOrDefault(x => x.Id == id);
 
-            // 3. Return that specific student
-            return Ok(student);
+                if (student == null)
+                    return NotFound("Student not found");
+
+                var response = new StudentResponseDto
+                {
+                    Id = student.Id,
+                    Name = student.Name
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Something went wrong");
+            }
         }
 
         //[HttpPost]
@@ -80,6 +105,7 @@ namespace StudentManagementAPI.Controllers
         //    students.Add(student);
         //    return Ok(student);
         //}
+        //---------------------EXPLANATION---------------------
         //so will the user enter the name and age on frontend then it all goes to the dto object inside parameter and then is used
         //inside the : var student = new Student
 
@@ -106,7 +132,7 @@ namespace StudentManagementAPI.Controllers
             students.Add(student);
 
             return CreatedAtAction(
-                nameof(GetStudentbyId),
+                nameof(GetStudentById),
                 new { id = student.Id },
                 student
             );
