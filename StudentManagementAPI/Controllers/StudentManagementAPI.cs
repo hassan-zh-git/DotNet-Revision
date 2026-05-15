@@ -45,19 +45,20 @@ namespace StudentManagementAPI.Controllers
             return Ok(student);
         }
 
-        [HttpPost]
-        public IActionResult AddStudent(CreateStudentDto dto)
-        {
-            var student = new Student
-            {
-                Id = students.Count + 1, // This is a simple way to generate a new ID. In a real application, you'd use a database.
-                Name = dto.Name,
-                Age = dto.Age
-            };
-            students.Add(student);
-            return Ok(student);
-        }
-        //so will the user enter the name and age on frontend then it all goes to the dto object inside parameter and then is used inside the : var student = new Student
+        //[HttpPost]
+        //public IActionResult AddStudent(CreateStudentDto dto)
+        //{
+        //    var student = new Student
+        //    {
+        //        Id = students.Count + 1, // This is a simple way to generate a new ID. In a real application, you'd use a database.
+        //        Name = dto.Name,
+        //        Age = dto.Age
+        //    };
+        //    students.Add(student);
+        //    return Ok(student);
+        //}
+        //so will the user enter the name and age on frontend then it all goes to the dto object inside parameter and then is used
+        //inside the : var student = new Student
 
         //{
 
@@ -68,6 +69,26 @@ namespace StudentManagementAPI.Controllers
         //    Age = dto.Age
 
         //};
+
+        [HttpPost]
+        public IActionResult AddStudent(CreateStudentDto dto)
+        {
+            var student = new Student
+            {
+                Id = students.Count + 1,
+                Name = dto.Name,
+                Age = dto.Age
+            };
+
+            students.Add(student);
+
+            return CreatedAtAction(
+                nameof(GetStudentbyId),
+                new { id = student.Id },
+                student
+            );
+        }
+
         [HttpPut("{id}")]
         public IActionResult UpdateStudent(int id, UpdateStudentDto dto)
         {
