@@ -39,7 +39,12 @@ namespace StudentManagementAPI.Controllers
                 Name = x.Name
             }).ToList();
 
-            return Ok(response);
+            return Ok(new ApiResponse<List<StudentResponseDto>>                      //API RESPONSE STANDARDIZATION
+            {
+                Success = true,
+                Message = "Students retrieved successfully",
+                Data = response
+            });
         }
         //EXPLANATION
         //students          → go into the list
