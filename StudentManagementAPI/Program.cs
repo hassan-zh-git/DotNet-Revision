@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using StudentManagementAPI.Models;
 using System.Numerics;
 using System.Reflection;
+using StudentManagementAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+ 
+builder.Services.AddDbContext<AppDbContext>(options =>                ////AddDbContext   Means: Register AppDbContext  ,ASP.NET can now create it when needed
+
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
 
